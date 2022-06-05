@@ -36,33 +36,17 @@ except ImportError:
 
 
 #   *   *   *   *   *   *
-# VARIABLES
-#   *   *   *   *   *   *
-# File objects
-try:
-    fin_name = "DataStreams/SampleDertData.csv"
-    filestream_in = open(fin_name, "rt", newline='')
-except:
-    print("No sample data to modify")
-    sys.exit(ERR_NO_DATA)
-try:
-    fout_name = "DataStreamsFiltered/SampleDertDataFiltered.csv"
-    filestream_out = open(fout_name, "wt", newline='')
-except:
-    print("Unable to open output file")
-    sys.exit(ERR_TIMEOUT)
-
-
-#   *   *   *   *   *   *
-# FUNCTIONS
+# DATA FUNCTIONS
 #   *   *   *   *   *   *
 # Bulk add-value to all rows
-def append_values_bulk(to_add):
+def append_values_bulk(fname_in, col_add, fname_out):
     data_out = []
+    filestream_in = open_reader_stream(fname_in)
     with filestream_in:
         reader = csv.reader(filestream_in)
         headers = next(reader)
-        data_out = [headers] + [row + [to_add] for i, row in enumerate(reader)]
+        data_out = [headers] + [row + [col_add] for i, row in enumerate(reader)]
+    filestream_out = open_writer_stream(fname_out)
     with filestream_out:
         csv.writer(filestream_out, delimiter=",").writerows(data_out)
 
@@ -70,6 +54,22 @@ def append_values_bulk(to_add):
 
 
 #   *   *   *   *   *   *
-# PROGRAM
+# FILE SYSTEM FUNCTIONS
 #   *   *   *   *   *   *
-append_values_bulk("")   # Add a blank (3rd) entry to each row
+# Read object
+def open_reader_stream(fname):
+    try:
+        reader_str = open(fname, "rt", newline='')   # Open in "read text" mode, universal newline
+        return reader_str
+    except:
+        print("Could not read file " + fname)
+        sys.exit(ERR_NO_DATA)
+# Write object
+def open_writer_stream(fname):
+    try:
+        writer_str = open(fname, "wt", newline='')   # Open in "write text" mode, universal newline
+        return writer_str
+    except:
+        print(fname)
+        print("Could not write file {}".format(fname))
+        sys.exit(ERR_NO_DATA)

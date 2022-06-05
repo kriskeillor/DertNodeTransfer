@@ -1,0 +1,2 @@
+# TCP/IP File Transfer Daemon
+This is a script meant to be used for data cleaning and transfer. It will be called to read raw sensor data, tabulate it, remove bad entries, and share the data over TCP/IP.

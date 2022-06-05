@@ -1,6 +1,6 @@
 # Kris Keillor
 # DSC Datetime Generator
-# v0.1.0
+# v0.1.1
 # Prof. Junaid Khan
 # EECE 397A Wireless Networking
 #   *   *   *   *   *   *
@@ -13,21 +13,24 @@
 import sys
 # Local Library Files
 try:
-    from ERROR_CODES import DERT_ERROR_NONE, DERT_ERROR_TIMEOUT, DERT_ERROR_GENERIC, DERT_ERROR_NO_DATA
+    from ERROR_CODES import PICO_ERROR_NONE as ERR_NONE
+    from ERROR_CODES import PICO_ERROR_TIMEOUT as ERR_TIMEOUT
+    from ERROR_CODES import PICO_ERROR_GENERIC as ERR_GENERIC
+    from ERROR_CODES import PICO_ERROR_NO_DATA as ERR_NO_DATA
 except ImportError:
-    print("FTD library file ERROR_CODES.py not located.")
+    print("Error loading FTD library file ERROR_CODES.py.")
     sys.exit(-1)
 # Modules
 try:
     import datetime
 except ImportError:
     print("Datetime module import failed")
-    sys.exit(DERT_ERROR_GENERIC)
+    sys.exit(ERR_GENERIC)
 try:
     import csv
 except ImportError:
     print("CSV module import failed")
-    sys.exit(DERT_ERROR_GENERIC)
+    sys.exit(ERR_GENERIC)
 #   *   *   *   *   *   *
 
 
@@ -37,18 +40,35 @@ except ImportError:
 # File objects
 try:
     fin_name = "DataStreams/SampleDertData.csv"
-    filestream_in = open(fin_name, "rt")
+    filestream_in = open(fin_name, "rt", newline='')
 except:
     print("No sample data to modify")
-    sys.exit(DERT_ERROR_NO_DATA)
+    sys.exit(ERR_NO_DATA)
 try:
-    fout_name = "DataStreamsFiltered/SampleDertData.csv"
-    filestream_out = open(fout_name, "wt")
+    fout_name = "DataStreamsFiltered/SampleDertDataFiltered.csv"
+    filestream_out = open(fout_name, "wt", newline='')
 except:
     print("Unable to open output file")
-    sys.exit(DERT_ERROR_TIMEOUT)
-# CSV objects
-with filestream_in:
-    reader = csv.reader(filestream_in)
-with filestream_out:
-    reader = csv.reader(filestream_out)
+    sys.exit(ERR_TIMEOUT)
+
+
+#   *   *   *   *   *   *
+# FUNCTIONS
+#   *   *   *   *   *   *
+# Bulk add-value to all rows
+def append_values_bulk(to_add):
+    data_out = []
+    with filestream_in:
+        reader = csv.reader(filestream_in)
+        headers = next(reader)
+        data_out = [headers] + [row + [to_add] for i, row in enumerate(reader)]
+    with filestream_out:
+        csv.writer(filestream_out, delimiter=",").writerows(data_out)
+
+    return ERR_NONE
+
+
+#   *   *   *   *   *   *
+# PROGRAM
+#   *   *   *   *   *   *
+append_values_bulk("")   # Add a blank (3rd) entry to each row

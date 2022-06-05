@@ -6,3 +6,5 @@
     - Added public key to github
     - Rewrote upstream git url to be "git@github.com:user/repo.git"
 
+## Using Python Files
+Note that the script currently cannot gracefully create the output CSV directory if it is missing.

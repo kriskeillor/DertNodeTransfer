@@ -8,3 +8,10 @@
 
 ## Using Python Files
 Note that the script currently cannot gracefully create the output CSV directory if it is missing.
+
+## Using Samba
+References:
+1. https://raspberrypihq.com/how-to-share-a-folder-with-a-windows-computer-from-a-raspberry-pi/
+
+2. https://magpi.raspberrypi.com/articles/samba-file-server
+

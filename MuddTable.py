@@ -1,6 +1,7 @@
 # Kris Keillor
-# DSC Datetime Generator
-# v0.1.1
+# Table (CSV) Script
+# Multi User Data Daemon (MUDD) library
+# v0.2.0
 # Prof. Junaid Khan
 # EECE 397A Wireless Networking
 #   *   *   *   *   *   *

@@ -1,7 +1,7 @@
 # Kris Keillor
 # Socket (TCP/IP) Script
 # Multi User Data Daemon (MUDD) library
-# v0.3.0
+# v0.4.0
 # Prof. Junaid Khan
 # EECE 397A Wireless Networking
 #   *   *   *   *   *   *
@@ -53,6 +53,16 @@ except ImportError:
     sys.exit(ERR_GENERIC)
 
 
+#   *   *   *   *   *   *   *
+# VARIABLES
+#   *   *   *   *   *   *   *
+invalid_req_msg = "Please enter a valid code (AIR, LUX, or SOIL)".encode("ascii")
+sample_data = "./DataStreams/SampleDertData03.csv"
+air_path = os.path.expanduser("~/iotshare/AirData.csv")
+lux_path = os.path.expanduser("~/iotshare/LuxData.csv")
+soil_path = os.path.expanduser("~/iotshare/SoilData.csv")
+
+
 #   *   *   *   *   *   *
 # FUNCTIONS
 #   *   *   *   *   *   *
@@ -68,9 +78,11 @@ def watch_socket_threaded(connSocket):
     while True:
         msg = connSocket.recv(1024).decode()
         if msg == "AIR":
-            get_rows_by_code(["ARH", "ATF"])
-        if msg == "LUX":
-            get_rows_by_code(["LUX"])
-        if msg == "SOIL":
-            get_rows_by_code(["STC", "SWC"])
+            get_rows_by_code(sample_data, ["ARH", "ATF"], air_path)
+        elif msg == "LUX":
+            get_rows_by_code(sample_data, ["LUX"], lux_path)
+        elif msg == "SOIL":
+            get_rows_by_code(sample_data, ["STC", "SWC"], soil_path)
+        else:
+            connSocket.send(invalid_req_msg)
     return ERR_NONE

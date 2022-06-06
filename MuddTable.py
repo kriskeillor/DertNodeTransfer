@@ -1,7 +1,7 @@
 # Kris Keillor
 # Table (CSV) Script
 # Multi User Data Daemon (MUDD) library
-# v0.3.0
+# v0.4.0
 # Prof. Junaid Khan
 # EECE 397A Wireless Networking
 #   *   *   *   *   *   *
@@ -22,6 +22,9 @@ except ImportError:
     print("Error loading FTD library file ERROR_CODES.py.")
     sys.exit(-1)
 # Modules
+import os
+import sys
+import traceback
 try:
     from datetime import datetime
 except ImportError:
@@ -70,15 +73,16 @@ def append_entry(fname_in, val_name, value):
 def get_rows_by_code(fname_in, code, fname_out):
     data_out = []
     # Open input
-    filestream_in = open_reader_stream(fname_in)
+    filestream_in = open(fname_in, "rt", newline="") # Open in "read text" mode
     with filestream_in:
-        reader = csv.reader(filestream_in)
-        headers = next(reader)
-        row = next(reader)
+        row = next(filestream_in, None)
         while row is not None:
             if row[0] in code:
                 data_out += row
-            row = next(reader)
+            row = next(filestream_in, None)
+    # Debugging - print file dir
+    #curpath = os.path.abspath(os.curdir)
+    #print("Trying to open: {0}".format(os.path.join
     filestream_out = open_writer_stream(fname_out)
     with filestream_out:
         csv.writer(filestream_out, delimiter=",").writerows(data_out)
@@ -101,8 +105,8 @@ def open_writer_stream(fname):
     try:
         writer_str = open(fname, "wt", newline='\n')   # Open in "write text" mode
         return writer_str
-    except:
-        print(fname)
+    except Exception:
+        print(traceback.format_exc())
         print("Could not write file {}".format(fname))
         sys.exit(ERR_NO_DATA)
 # Append object

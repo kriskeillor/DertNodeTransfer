@@ -1,7 +1,7 @@
 # Kris Keillor
 # Demonstration Script
 # Multi User Data Daemon (MUDD) library
-# v0.3.0
+# v0.4.0
 # Prof. Junaid Khan
 # EECE 397A Wireless Networking
 
@@ -31,6 +31,7 @@ except ImportError:
     print("Error loading MUDD library file MuddSocket.py")
     sys.exit(ERR_GENERIC)
 # Modules
+import os
 try:
     import random
 except ImportError:
@@ -46,6 +47,11 @@ try:
 except ImportError:
     print("_Thread module import failed")
     sys.exit(ERR_GENERIC)
+try:
+    from pathlib import Path
+except ImportError:
+    print("Pathlib.Path module import failed")
+    sys.exit(ERR_GENERIC)
 
 
 #   *   *   *   *   *   *
@@ -58,11 +64,14 @@ fname_test1 = "SampleDertData01"
 fname_test2 = "SampleDertData02"
 fname_test3 = "SampleDertData03"
 dat_ext = ".csv"
+#home_dir = str(Path.home())
+#share_dir = home_dir + "iotshare/"
 # Socket settings
 maxUsers = 3
 localIP = "192.168.137.53"
 tcpPort = 6545
 ThreadCount = 0
+
 
 #   *   *   *   *   *   *
 # PROGRAM

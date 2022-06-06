@@ -10,6 +10,32 @@
 Note that the script currently cannot gracefully create the output CSV directory if it is missing.
 
 ## Using Samba
+Samba was installed using:
+```
+sudo apt-get update
+sudo apt-get upgrade
+sudo apt-get install samba samba-common-bin
+```
+
+The final output is logged as [apt-get-samba](apt-get-samba.log). The config file is located at `/etc/samba/smb.conf`. After the program was installed, a share drive was created with:
+
+```
+sudo mkdir -m 1777 /iotshare
+```
+
+and the contents of [iotshare](iotshare.conf) appended to the smb config file.
+
+Finally, a Samba user/password is created and the Samba service restarted:
+
+```
+sudo smbpasswd -a pi
+sudo /etc/init.d/smbd restart
+```
+
+Note that the last command is slightly different than reference [2] defines, as the service on my installation was named "smbd" instead of "samba".
+
+To connect to the drive - the exciting part! - I had to map a network drive with the address \\IP\user\iotshare, checking "Use different credentials" and logging in with the user/password combination made earlier. A quick file touch demonstrated the successful file share, as shown in [SambaShareHelloWorld](SambaShareHelloWorld.png)!
+
 References:
 1. https://raspberrypihq.com/how-to-share-a-folder-with-a-windows-computer-from-a-raspberry-pi/
 

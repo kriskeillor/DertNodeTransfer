@@ -1,5 +1,5 @@
 # Kris Keillor
-# Client Script
+# Demonstration Script - Client
 # Multi User Data Daemon (MUDD) library
 # v0.2.0
 # Prof. Junaid Khan
@@ -9,31 +9,30 @@
 #   *   *   *   *   *   *
 # INCLUDES
 #   *   *   *   *   *   *
-# System module
-import sys
-# Local Library Files
-try:
-    from ERROR_CODES import PICO_ERROR_NONE as ERR_NONE
-    from ERROR_CODES import PICO_ERROR_TIMEOUT as ERR_TIMEOUT
-    from ERROR_CODES import PICO_ERROR_GENERIC as ERR_GENERIC
-    from ERROR_CODES import PICO_ERROR_NO_DATA as ERR_NO_DATA
-except ImportError:
-    print("Error loading MUDD library file 'ERROR_CODES.py.'")
-    sys.exit(-1)
-try:
-    from MuddTable import append_values_bulk
-except ImportError:
-    print("Error loading MUDD library file MuddTable.py")
-    sys.exit(-1)
+from socket import *
 
 
 #   *   *   *   *   *   *
 # VARIABLES
 #   *   *   *   *   *   *
-# File objects
+# Network settings
+localhost = "192.168.137.53"
+tcpPort = 6545;
+# Create TCP client
+clientSocket = socket(AF_INET, SOCK_STREAM);
+clientSocket.connect((localhost, tcpPort));
 
 
 #   *   *   *   *   *   *
 # PROGRAM
 #   *   *   *   *   *   *
-# File 1 read/write
+# Debug 
+print("Socket: {}".format(clientSocket));
+print("localhost: {}; port: {}".format(localhost, tcpPort));
+# Send and receive a message
+while True:
+    msg = input("Please, write a message! ");
+    clientSocket.send(msg.encode());
+    msgMod = clientSocket.recv(1024);
+    print("Response from server: " + msgMod.decode() + "\n");
+connSocket.close();

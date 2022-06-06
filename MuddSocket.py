@@ -1,7 +1,7 @@
 # Kris Keillor
 # Socket (TCP/IP) Script
 # Multi User Data Daemon (MUDD) library
-# v0.2.0
+# v0.3.0
 # Prof. Junaid Khan
 # EECE 397A Wireless Networking
 #   *   *   *   *   *   *
@@ -19,8 +19,12 @@ try:
     from ERROR_CODES import PICO_ERROR_GENERIC as ERR_GENERIC
     from ERROR_CODES import PICO_ERROR_NO_DATA as ERR_NO_DATA
 except ImportError:
-    print("Error loading FTD library file ERROR_CODES.py.")
+    print("Error loading MUDD library file ERROR_CODES.py.")
     sys.exit(-1)
+try:
+    from MuddTable import *
+except ImportError:
+    print("Error loading MUDD library file MuddTable.py.")
 # Modules
 try:
     from socket import *
@@ -50,53 +54,23 @@ except ImportError:
 
 
 #   *   *   *   *   *   *
-# VARIABLES
-#   *   *   *   *   *   *
-# Network Settings
-localIP = "192.168.137.53"
-tcpPort = 6545
-maxUsers = 3
-
-# Application Variables
-ThreadCount = 0
-
-
-#   *   *   *   *   *   *
 # FUNCTIONS
 #   *   *   *   *   *   *
 # Initalize the socket with the assigned IP addr and provided port
-def init_socket():
+def init_socket(addr, port):
     servSocket = socket(AF_INET, SOCK_STREAM)
     servSocket.setsockopt(SOL_SOCKET, SO_REUSEADDR, 1)
-    servSocket.bind((localIP, tcpPort))
+    servSocket.bind((addr, port))
     return servSocket
 
-# Call this thread regularly to detect incoming conn requests without blocking
-def check_readable_socket():
-    return ERR_NONE
-
 # Create a threaded socket monitor for an individual user.
-def start_socket_thread():
+def watch_socket_threaded(connSocket):
+    while True:
+        msg = connSocket.recv(1024).decode()
+        if msg == "AIR":
+            get_rows_by_code(["ARH", "ATF"])
+        if msg == "LUX":
+            get_rows_by_code(["LUX"])
+        if msg == "SOIL":
+            get_rows_by_code(["STC", "SWC"])
     return ERR_NONE
-
-# The workhorse of Mudd.Socket, this function watches for incoming user 
-# requests and fulfills them using Mudd.Table.
-def watch_socket():
-    return ERR_NONE
-
-# demo
-daemon = init_socket()
-daemon.listen(maxUsers)
-print("Listening on port {0} for up to {1} users.".format(localIP, maxUsers))
-
-read_list = [daemon]
-while True:
-    readable, writable, errored = select(read_list, [], [])
-    for s in readable:
-        if s is server_socket:
-            (client_socket, address) = server_socket.accept()
-            read_list.append(client_socket)
-            print("Connection from", address)
-        else:
-            data = s.recv(1024).decode()
-            print(data)

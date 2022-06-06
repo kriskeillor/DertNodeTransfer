@@ -1,7 +1,7 @@
 # Kris Keillor
 # Table (CSV) Script
 # Multi User Data Daemon (MUDD) library
-# v0.2.0
+# v0.3.0
 # Prof. Junaid Khan
 # EECE 397A Wireless Networking
 #   *   *   *   *   *   *
@@ -52,7 +52,6 @@ def append_values_bulk(fname_in, col_add, fname_out):
     filestream_out = open_writer_stream(fname_out)
     with filestream_out:
         csv.writer(filestream_out, delimiter=",").writerows(data_out)
-        filestream_out.close()
     filestream_out.close()
     return ERR_NONE
 
@@ -67,6 +66,24 @@ def append_entry(fname_in, val_name, value):
     filestream_in.close()
     return ERR_NONE
 
+# Get rows that correspond to a certain DataCode and write to a file
+def get_rows_by_code(fname_in, code, fname_out):
+    data_out = []
+    # Open input
+    filestream_in = open_reader_stream(fname_in)
+    with filestream_in:
+        reader = csv.reader(filestream_in)
+        headers = next(reader)
+        row = next(reader)
+        while row is not None:
+            if row[0] in code:
+                data_out += row
+            row = next(reader)
+    filestream_out = open_writer_stream(fname_out)
+    with filestream_out:
+        csv.writer(filestream_out, delimiter=",").writerows(data_out)
+    filestream_out.close()
+    return ERR_NONE
 
 #   *   *   *   *   *   *
 # FILE SYSTEM FUNCTIONS

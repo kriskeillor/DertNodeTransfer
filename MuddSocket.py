@@ -1,7 +1,7 @@
 # Kris Keillor
 # Socket (TCP/IP) Script
 # Multi User Data Daemon (MUDD) library
-# v0.4.0
+# v0.5.1
 # Prof. Junaid Khan
 # EECE 397A Wireless Networking
 #   *   *   *   *   *   *
@@ -79,10 +79,13 @@ def watch_socket_threaded(connSocket):
         msg = connSocket.recv(1024).decode()
         if msg == "AIR":
             get_rows_by_code(sample_data, ["ARH", "ATF"], air_path)
+            connSocket.send("Data sent to iotshare/".encode())
         elif msg == "LUX":
             get_rows_by_code(sample_data, ["LUX"], lux_path)
+            connSocket.send("Data sent to iotshare/".encode())
         elif msg == "SOIL":
             get_rows_by_code(sample_data, ["STC", "SWC"], soil_path)
+            connSocket.send("Data sent to iotshare/".encode())
         else:
             connSocket.send(invalid_req_msg)
     return ERR_NONE

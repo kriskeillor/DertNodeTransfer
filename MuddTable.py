@@ -1,7 +1,7 @@
 # Kris Keillor
 # Table (CSV) Script
 # Multi User Data Daemon (MUDD) library
-# v0.4.0
+# v0.5.0
 # Prof. Junaid Khan
 # EECE 397A Wireless Networking
 #   *   *   *   *   *   *
@@ -73,16 +73,11 @@ def append_entry(fname_in, val_name, value):
 def get_rows_by_code(fname_in, code, fname_out):
     data_out = []
     # Open input
-    filestream_in = open(fname_in, "rt", newline="") # Open in "read text" mode
-    with filestream_in:
-        row = next(filestream_in, None)
-        while row is not None:
+    with open(fname_in, newline='') as csvfile:
+        reader = csv.reader(csvfile, delimiter = ',')
+        for row in reader:
             if row[0] in code:
                 data_out += row
-            row = next(filestream_in, None)
-    # Debugging - print file dir
-    #curpath = os.path.abspath(os.curdir)
-    #print("Trying to open: {0}".format(os.path.join
     filestream_out = open_writer_stream(fname_out)
     with filestream_out:
         csv.writer(filestream_out, delimiter=",").writerows(data_out)

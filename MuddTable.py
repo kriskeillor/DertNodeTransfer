@@ -54,7 +54,6 @@ def append_values_bulk(fname_in, col_add, fname_out):
         csv.writer(filestream_out, delimiter=",").writerows(data_out)
         filestream_out.close()
     filestream_out.close()
-
     return ERR_NONE
 
 # Append a single name-value pair, automatically generating timestamp
@@ -66,6 +65,7 @@ def append_entry(fname_in, val_name, value):
         writer = csv.writer(filestream_in)
         writer.writerow([val_name, value, datetime.now()])
     filestream_in.close()
+    return ERR_NONE
 
 
 #   *   *   *   *   *   *

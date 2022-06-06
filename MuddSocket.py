@@ -23,13 +23,54 @@ except ImportError:
     sys.exit(-1)
 # Modules
 try:
-    import socket
+    from socket import *
 except ImportError:
     print("Socket module import failed")
     sys.exit(ERR_GENERIC)
+try:
+    import os
+except ImportError:
+    print("OS module import failed")
+    sys.exit(ERR_GENERIC)
+try:
+    import _thread
+except ImportError:
+    print("_Thread module import failed")
+    sys.exit(ERR_GENERIC)
+
+
 #   *   *   *   *   *   *
+# VARIABLES
+#   *   *   *   *   *   *
+# Network Settings
+localIP = "192.168.137.53"
+tcpPort = 6545
+
+# Application Variables
+ThreadCount = 0
 
 
 #   *   *   *   *   *   *
 # FUNCTIONS
 #   *   *   *   *   *   *
+# Initalize the socket with the assigned IP addr and provided port
+def init_socket():
+    servSocket = socket(AF_INET, SOCK_STREAM)
+    servSocket.bind((localIP, tcpPort))
+    return servSocket
+
+# Call this thread regularly to detect incoming conn requests without blocking
+def check_readable_socket():
+    return ERR_NONE
+
+# Create a threaded socket monitor for an individual user.
+def start_socket_thread():
+    return ERR_NONE
+
+# The workhorse of Mudd.Socket, this function watches for incoming user 
+# requests and fulfills them using Mudd.Table.
+def watch_socket():
+    return ERR_NONE
+
+# demo
+init_socket()

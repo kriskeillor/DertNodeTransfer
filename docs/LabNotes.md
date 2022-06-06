@@ -41,3 +41,7 @@ References:
 
 2. https://magpi.raspberrypi.com/articles/samba-file-server
 
+## Using the `Select()` System Call
+
+References:
+1. https://stackoverflow.com/questions/5308080/python-socket-accept-nonblocking

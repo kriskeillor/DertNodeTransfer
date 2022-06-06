@@ -28,9 +28,19 @@ except ImportError:
     print("Socket module import failed")
     sys.exit(ERR_GENERIC)
 try:
+    import time
+except ImportError:
+    print("Time module import failed")
+    sys.exit(ERR_GENERIC)
+try:
     import os
 except ImportError:
     print("OS module import failed")
+    sys.exit(ERR_GENERIC)
+try:
+    from select import *
+except ImportError:
+    print("Select module import failed")
     sys.exit(ERR_GENERIC)
 try:
     import _thread
@@ -45,6 +55,7 @@ except ImportError:
 # Network Settings
 localIP = "192.168.137.53"
 tcpPort = 6545
+maxUsers = 3
 
 # Application Variables
 ThreadCount = 0
@@ -56,6 +67,7 @@ ThreadCount = 0
 # Initalize the socket with the assigned IP addr and provided port
 def init_socket():
     servSocket = socket(AF_INET, SOCK_STREAM)
+    servSocket.setsockopt(SOL_SOCKET, SO_REUSEADDR, 1)
     servSocket.bind((localIP, tcpPort))
     return servSocket
 
@@ -73,4 +85,18 @@ def watch_socket():
     return ERR_NONE
 
 # demo
-init_socket()
+daemon = init_socket()
+daemon.listen(maxUsers)
+print("Listening on port {0} for up to {1} users.".format(localIP, maxUsers))
+
+read_list = [daemon]
+while True:
+    readable, writable, errored = select(read_list, [], [])
+    for s in readable:
+        if s is server_socket:
+            (client_socket, address) = server_socket.accept()
+            read_list.append(client_socket)
+            print("Connection from", address)
+        else:
+            data = s.recv(1024).decode()
+            print(data)
